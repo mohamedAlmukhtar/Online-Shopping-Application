@@ -1,0 +1,14 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}/*------------------------------------------------------------- 
+// AUTHOR: Mohamed Mokhtar
+// FILENAME: OnlineShop.java
+// SPECIFICATION: Final Project (Online Shop Application) class
+// FOR: CSE 110 - Final Project
+// TIME SPENT: -
+//-----------------------------------------------------------*/
+${licensePrefix}Each line should be prefixed with ${licensePrefix}
+<#if licenseLast??>
+${licenseLast}
+</#if>
