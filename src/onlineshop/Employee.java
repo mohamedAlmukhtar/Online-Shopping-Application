@@ -5,3 +5,17 @@
 // FOR: CSE 110 - Final Project
 // TIME SPENT: -
 //-----------------------------------------------------------*/
+ * Each line should be prefixed with  * 
+ */
+
+package onlineshop;
+
+/**
+ *
+ * @author abdel
+ */
+
+
+public class Employee {
+    
+}

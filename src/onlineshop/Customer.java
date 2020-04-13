@@ -5,3 +5,12 @@
 // FOR: CSE 110 - Final Project
 // TIME SPENT: -
 //-----------------------------------------------------------*/
+package onlineshop;
+
+/**
+ *
+ * @author abdel
+ */
+public class Customer {
+    
+}
