@@ -1,0 +1,5 @@
+Sugar,20,2.50
+Toilet-Paper,40,5.00
+Water,100,2.30
+Apples,20,3.20
+Eggs,43,5.40

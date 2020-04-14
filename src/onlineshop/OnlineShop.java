@@ -22,34 +22,41 @@ public class OnlineShop {
      */
     public static void main(String[] args) throws FileNotFoundException {
         
-        
         System.out.println("Welcome to Online Shop.\n---------------------");
         //System.out.println("These are the current available products:");
         
         File login = new File("src/onlineshop/datafiles/login.txt");
+        File inventory = new File("src/onlineshop/datafiles/inventory.txt");
         
         if(logIn(login)){
             System.out.println("\nWelcome " + session.getType() 
-                    + " " + session.getUsername());
+                    + " " + session.getUsername() + "\n");
         }
         else{
-            System.out.println("\nInvalid Username or Password");
+            System.out.println("\nInvalid Username or Password\n");
+        }
+        
+        if(session.getType().equals("Customer") && session != null){
+            
+            Customer.fetchOrder(session.getUsername());
+            
+            switch(Customer.customerEvents()){
+                
+                case 1: Customer.showProducts();
+                        break;
+                
+                case 2: Customer.searchProduct();
+                        break;
+                        
+                case 3: Customer.placeOrder();
+                        break;
+                default: System.out.println("Invalid Option");
+            }
+            
+            
         }
         
         
-        /*Scanner inventory = new Scanner(new FileReader("src/onlineshop/datafiles/inventory.txt"));
-        
-        String entry;
-        
-        
-        
-        while(inventory.hasNextLine()){
-            entry = inventory.nextLine();
-            Scanner tokens = new Scanner(entry);
-            tokens.useDelimiter(",");
-            
-            printItem(tokens);
-        }*/
     }
     
     public static boolean logIn(File login) throws FileNotFoundException{
@@ -57,9 +64,9 @@ public class OnlineShop {
         Scanner inFile = new Scanner(new FileReader(login));
         
         String username, password, entry;
-        Scanner in = new Scanner(System.in);
-        
         String parts[] = new String[3];
+        
+        Scanner in = new Scanner(System.in);
         
         System.out.println("Enter your username : ");
         username = in.next();
@@ -78,11 +85,10 @@ public class OnlineShop {
                 
                 return true;
             }
-            else{
-                return false;
-            }
             
         }
+        
+        inFile.close();
         
         return false;
         

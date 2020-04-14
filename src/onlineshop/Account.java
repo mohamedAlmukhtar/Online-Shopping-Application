@@ -13,6 +13,7 @@ package onlineshop;
  */
 public class Account {
     
+    private int ID;
     private String username;
     private String password;
     private String type;
@@ -21,10 +22,11 @@ public class Account {
         
     }
     
-    public Account(String username, String password, String type) {
+    public Account(String username, String password, String type, int ID) {
         this.username = username;
         this.password = password;
         this.type = type;
+        this.ID = ID;
     }
 
     public String getUsername() {
