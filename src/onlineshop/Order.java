@@ -48,6 +48,10 @@ public class Order {
     }
     
     
+    public void addItem(){
+        
+    }
+    
     public void newOrder(){
         
         String product;
@@ -58,6 +62,8 @@ public class Order {
         product = in.next();
         System.out.println("Enter quantity : ");
         quantity = in.nextInt();
+        
+        
     }
     
     

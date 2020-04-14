@@ -108,7 +108,9 @@ public class Customer {
             System.out.println("You already have a saved order.\n");
             System.out.println("Press\n1) to resume order\n2) to overwrite order");
             switch(in.nextInt()){
-                case 1: 
+                case 1: order.addItem();
+                        break;
+                case 2: order.newOrder();
             }
         }
         else{
