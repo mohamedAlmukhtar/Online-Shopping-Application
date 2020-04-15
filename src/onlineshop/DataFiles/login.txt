@@ -1,2 +1,3 @@
 John,pass,Employee
 Smith,123,Customer
+Mukhtar,abcd,Customer

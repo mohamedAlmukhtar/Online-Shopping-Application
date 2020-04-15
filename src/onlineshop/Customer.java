@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Scanner;
  */
 public class Customer {
 
-    static Order order;
+    private static Order order;
 
     private String firstName;
     private String lastName;
@@ -36,19 +37,24 @@ public class Customer {
         System.out.println("\nSelect one of the following options : ");
         System.out.println("1) Show Products");
         System.out.println("2) Search for a product");
-        System.out.println("3) Place Order");
+        System.out.println("3) New Order");
+        System.out.println("4) Load saved Order");
+        System.out.println("5) quit");
         
         return in.nextInt();
     }
     
     
-    static void fetchOrder(String customerName) {
+    static Order fetchOrder(String customerName) {
         try {
             order = new Order(customerName);
             order.fetchOrder();
         } catch (FileNotFoundException ex) {
             order = null;
         }
+            
+        return order;
+        
     }
     
     
@@ -75,7 +81,7 @@ public class Customer {
     }
     
     
-    public static void placeOrder() throws FileNotFoundException, IOException{
+    public static boolean placeOrder() throws FileNotFoundException, IOException{
         
         boolean flag = true;
         boolean isValid;
@@ -86,11 +92,11 @@ public class Customer {
             order.printOrder();
             do{
                 System.out.println("Press\n1) to resume order\n2) to overwrite order");
-                switch(in.nextInt()){
-                    case 1: flag = true;
+                switch(in.next()){
+                    case "1": flag = true;
                             isValid = true;
                             break;
-                    case 2: flag = false;
+                    case "2": flag = false;
                             isValid = true;
                             break;
                     default: System.out.println("Invalid Input, Please try again:");
@@ -103,7 +109,7 @@ public class Customer {
             order = new Order(OnlineShop.session.getUsername());
         }
         
-        order.submitProduct(flag);
+        return flag;
         
         
     }

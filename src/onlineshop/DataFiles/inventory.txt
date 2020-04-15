@@ -1,4 +1,4 @@
 Sugar,0,2.5
-Water,33,2.3
+Water,0,2.3
 Apples,74,3
 Milk,50,4.2

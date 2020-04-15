@@ -39,6 +39,24 @@ public class Order {
         }
     }
     
+    public void saveOrder(boolean flag) throws IOException{
+        
+        String entry;
+        Item item;
+        FileWriter writer = new FileWriter(orderFile,flag);
+        PrintWriter outFile = new PrintWriter(writer);
+        
+        for(int i=0; i<orders.size; i++){
+            item = (Item) orders.array[i];
+            entry = item.getName() + "," + item.getQuantity() + "," + item.getPrice() + "\n";
+
+            outFile.println(entry);
+
+        }
+        
+        outFile.close();
+    }
+    
     public final void fetchOrder() throws FileNotFoundException{
         
         int index = 0;
@@ -85,12 +103,15 @@ public class Order {
         if(orderFile == null)
             orderFile.createNewFile();
         
-        Item item;
-        String entry;
-        FileWriter writer = new FileWriter(orderFile,flag);
-        PrintWriter outFile = new PrintWriter(writer);
+        Item item, temp;
+        int exist;
         
         item = Inventory.searchItem(product);
+        
+        if(item == null){
+            System.out.println("Item (" + product + ") does not exist.");
+            return;
+        }
         
         if(item.getQuantity() == 0){
             System.out.println("Unfortunetly, no " + item.getName() + " in stock at the moment");
@@ -99,17 +120,47 @@ public class Order {
         
         quantity = checkQuantity(quantity, item.getQuantity());
         
-        entry = item.getName() + "," + quantity + "," + item.getPrice();
+        exist = searchItem(product);
         
-        outFile.println(entry);
+        if(exist>=0){
+            temp = (Item) orders.array[exist];
+            temp.setQuantity(temp.getQuantity() + quantity);
+            orders.array[exist] = temp;
+        }
+        else{
+            item.setQuantity(quantity);
+            orders.add(item);
+        }
         
-        Inventory.editItem(item, (item.getQuantity() - quantity));
         
-        orders.add(item);
+//        Inventory.editItem(item, (item.getQuantity() - quantity));
         
-        outFile.close();
+        
+        
     }
     
+    
+    public int searchItem(String search) throws FileNotFoundException{
+        
+        Item item = null;
+        
+        int i = 0;
+        
+        while(i<orders.size){
+            
+            item = (Item) orders.array[i];
+            
+            if(item.getName().equalsIgnoreCase(search)){
+                return i;
+            }
+            
+            i++;
+            
+        }
+        
+        return -1;
+        
+    }
     
     
     public int checkQuantity(int buy, int stock){
