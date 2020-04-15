@@ -11,6 +11,7 @@ package onlineshop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class OnlineShop {
@@ -20,7 +21,7 @@ public class OnlineShop {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         
         System.out.println("Welcome to Online Shop.\n---------------------");
         //System.out.println("These are the current available products:");
@@ -42,7 +43,7 @@ public class OnlineShop {
             
             switch(Customer.customerEvents()){
                 
-                case 1: Customer.showProducts();
+                case 1: Inventory.printInventory();
                         break;
                 
                 case 2: Customer.searchProduct();

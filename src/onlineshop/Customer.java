@@ -10,9 +10,8 @@ package onlineshop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -46,30 +45,16 @@ public class Customer {
     static void fetchOrder(String customerName) {
         try {
             order = new Order(customerName);
+            order.fetchOrder();
         } catch (FileNotFoundException ex) {
             order = null;
         }
     }
     
-
-    public static void showProducts() throws FileNotFoundException{
-        
-        DynamicArray items = Inventory.fetchItems();
-        
-        for(int i=0; i<items.size; i++){
-            Item item = (Item) items.array[i];
-            System.out.println((i+1) + ") " + item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice());
-        }
-        
-        
-    }
-    
     
     public static void searchProduct() throws FileNotFoundException{
         
-        boolean found = false;
         Item item;
-        DynamicArray items = new DynamicArray();
         String search;
         
         Scanner in = new Scanner(System.in);
@@ -77,50 +62,53 @@ public class Customer {
         System.out.println("Enter name of product : ");
         search = in.next();
         
-        items = Inventory.fetchItems();
+        item = Inventory.searchItem(search);
         
-        int i = 0;
-        
-        while(i<items.size && !found){
-            
-            item = (Item) items.array[i];
-            i++;
-            
-            if(item.getName().equalsIgnoreCase(search)){
-                found = true;
-                System.out.println("Item found : ");
-                System.out.println(i + ") " + item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice());
-            }
-            
-        }
-        
-        if(!found)
+        if(item == null){
             System.out.println("Item NOT found : ");
-        
+        }
+        else{
+            System.out.println("Item found : ");
+            System.out.println(") " + item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice());
+        }
+                
     }
     
     
-    public static void placeOrder() throws FileNotFoundException{
+    public static void placeOrder() throws FileNotFoundException, IOException{
         
+        boolean flag = true;
+        boolean isValid;
         Scanner in = new Scanner(System.in);
         
         if(order != null){
             System.out.println("You already have a saved order.\n");
-            System.out.println("Press\n1) to resume order\n2) to overwrite order");
-            switch(in.nextInt()){
-                case 1: order.addItem();
-                        break;
-                case 2: order.newOrder();
-            }
+            order.printOrder();
+            do{
+                System.out.println("Press\n1) to resume order\n2) to overwrite order");
+                switch(in.nextInt()){
+                    case 1: flag = true;
+                            isValid = true;
+                            break;
+                    case 2: flag = false;
+                            isValid = true;
+                            break;
+                    default: System.out.println("Invalid Input, Please try again:");
+                             isValid = false;
+                }
+            }while(!isValid);
         }
         else{
-            System.out.println("");
+            System.out.println("Creating new order");
+            order = new Order(OnlineShop.session.getUsername());
         }
         
-        
+        order.submitProduct(flag);
         
         
     }
+    
+    
     
     
     public String getFirstName() {
