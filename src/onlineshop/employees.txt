@@ -1,0 +1,6 @@
+2211,Steven,Osburn,Manager,sosburn
+4534,John,Smith,Manager,jsmith
+3451,Jacob,Mason,Manager,jmason
+1234,William,Noah,Employee,wnoah
+9283,Michael,Ethan,Employee,methan
+3122,Daniel,Anthony,Employoe,danthon

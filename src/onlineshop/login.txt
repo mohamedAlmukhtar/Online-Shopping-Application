@@ -1,0 +1,10 @@
+sosburn,cse110,Manager
+jsmith,1234,Manager
+jmason,abcd,Manager
+wnoah,pass,Employee
+methan,123456,Employee
+danthony,qwerty,Employee
+ajames,aaa,Customer
+dlogan,bbb,Customer
+jryan,ccc,Customer
+lcaleb,ddd,Customer

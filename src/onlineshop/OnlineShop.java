@@ -1,6 +1,5 @@
 /*------------------------------------------------------------- 
 // AUTHOR: Mohamed Mokhtar
-// FILENAME: OnlineShop.java
 // SPECIFICATION: Final Project (Online Shop Application) class
 // FOR: CSE 110 - Final Project
 // TIME SPENT: -
@@ -12,78 +11,107 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
+
+
 
 public class OnlineShop {
 
-    static Account session = new Account();
     
+    static Scanner in = new Scanner(System.in);
+    
+    static Account session = new Account();
+    static DynamicArray employees;
+     
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) throws FileNotFoundException, IOException {
         
         System.out.println("Welcome to Online Shop.\n---------------------");
         //System.out.println("These are the current available products:");
         
-        Scanner in = new Scanner(System.in);
-        File login = new File("src/onlineshop/datafiles/login.txt");
-        File inventory = new File("src/onlineshop/datafiles/inventory.txt");
+        File login = new File("src/onlineshop/login.txt");
         
+        String selection;
         boolean isLogged;
         
         do{
-            isLogged = logIn(login);
-            if(isLogged){
-                System.out.println("\nWelcome " + session.getType() 
-                        + " " + session.getUsername() + "\n");
-            }
-            else{
-                System.out.println("\nInvalid Username or Password\n");
-            }
-        }while(!isLogged);
-        
-        if(session.getType().equals("Customer") && session != null){
-            
-            Order order;
-            order = Customer.fetchOrder(session.getUsername());
             
             do{
-                switch(Customer.customerEvents()){
-
-                    case 1: Inventory.printInventory();
-                            break;
-
-                    case 2: Customer.searchProduct();
-                            break;
-
-                    case 3: boolean flag = Customer.placeOrder();
-                            do{
-                                order.submitProduct(flag);
-                                System.out.println("\nPress: \n1 to add another item\nAny key to stop");
-//                                System.out.println("\nPress: \n2 to remove an item");
-//                                System.out.println("\nPress: \n3 to review order");
-//                                System.out.println("\nPress: \n4 to delete order");
-//                                System.out.println("\nPress: \n5 to completer order");
-                            }while(in.next().equals("1"));
-                            break;
-
-                    case 4: if(order != null)
-                                order.printOrder();
-                            else
-                                System.out.println("No order in records");
-                            break;
-                    case 5: System.out.println("\nThank you for using our service.\nGood Bye");
-                            return;
-                    default: System.out.println("Invalid Option");
+                isLogged = logIn(login);
+                if(isLogged){
+                    System.out.println("\nWelcome " + session.getType() 
+                            + " " + session.getUsername());
                 }
-            }while(true);
-            
+                else{
+                    System.out.println("\nInvalid Username or Password\n");
+                }
+            }while(!isLogged);
+
+
+            //Customer Login
+            if(session != null && session.getType().equals("Customer")){
+                //order = Customer.fetchOrder(session.getUsername());
+
+                Inventory.inventory = Inventory.fetchItems();
+                Customer.customers = Customer.fetchCustomers();
+
+                Customer customer = new Customer();
+
+                customer.customerEvents();
+
+                saveData(Inventory.inventoryFile, Inventory.inventory);
+                saveData(Customer.customerFile, Customer.customers);
+
+
+
+            }
+            //Employee Login
+            else if(session != null && session.getType().equals("Employee")){
+
+                Inventory.inventory = Inventory.fetchItems();
+                Customer.customers = Customer.fetchCustomers();
+
+                Employee employee = new Employee();
+
+                employee.employeeEvents();
+
+                saveData(Inventory.inventoryFile, Inventory.inventory);
+                saveData(Customer.customerFile, Customer.customers);
+
+            }
+            //Manager Login
+            else if(session != null && session.getType().equals("Manager")){
+
+                Inventory.inventory = Inventory.fetchItems();
+                Employee.employees = Employee.fetchEmployees();
+                Account.accounts = Account.fetchAccounts();
+                Customer.customers = Customer.fetchCustomers();
+
+                Manager manager = new Manager();
+
+                manager.managerEvents();
+
+                saveData(Inventory.inventoryFile, Inventory.inventory);
+                saveData(Employee.employeeFile, Employee.employees);
+                saveData(Account.logInFile, Account.accounts);
+                saveData(Customer.customerFile, Customer.customers);
+
+
+            }
+            System.out.println("\nDo you want to quit (y/n)? ");
+            selection = in.next();
+            System.out.println("");
             
         }
+        while(!selection.equalsIgnoreCase("y"));
         
-        
-    }
+        System.out.println("\nThank you for using our service.\nGood Bye");
+    }//End Method
+    
     
     public static boolean logIn(File login) throws FileNotFoundException{
         
@@ -91,8 +119,6 @@ public class OnlineShop {
         
         String username, password, entry;
         String parts[] = new String[3];
-        
-        Scanner in = new Scanner(System.in);
         
         System.out.println("Enter your username : ");
         username = in.next();
@@ -118,20 +144,103 @@ public class OnlineShop {
         
         return false;
         
-    }
+    }//End Method
     
-    public static String[] breakEntry(String entry, int num){
+    
+    public static void saveData(File file,DynamicArray data) throws FileNotFoundException
+    {
         
-        Scanner tokens = new Scanner(entry);
-        tokens.useDelimiter(",");
+        PrintWriter outFile = new PrintWriter(file);
         
-        String parts[] = new String[num];
         
-        for(int i=0; i<num; i++){
-            parts[i] = tokens.next();
+        for(int i=0;i<data.size;i++)
+        {
+            
+            
+            outFile.println(data.array[i].toString());
+            
         }
         
-        return parts;
-    }
+        
+        outFile.close();
+        
+    }//End Method
     
-}
+    
+    public static String[] breakEntry(String entry,int num)
+    {
+        
+        Scanner tokens = new Scanner(entry);
+        
+         tokens.useDelimiter(",");
+        
+        
+       String parts[] = new String[num];
+        
+        
+        for(int i=0; i<num; i++)
+        {
+            
+                parts[i] = tokens.next();
+            
+        }
+        
+        
+        return parts;
+        
+        
+        
+    }//End Method
+    
+    
+    public static Customer addCustomer()
+    {
+        
+        Scanner in = new Scanner(System.in);
+        
+        
+         Customer customer = new Customer();
+        
+        
+        System.out.print("\nPlease enter your First Name: ");
+        
+        customer.setFirstName(in.next());
+        
+        
+       System.out.print("Please enter your Last Name: ");
+        
+       customer.setLastName(in.next());
+        
+        
+        System.out.print("Please enter your Address: ");
+        in.nextLine();
+        String address = in.nextLine();
+        customer.setStreetAddress(address);
+        
+        
+        System.out.print("Please enter your City: ");
+        
+        customer.setCity(in.nextLine());
+        
+        
+        System.out.print("Please enter your State: ");
+        
+        
+        customer.setState(in.nextLine());
+        
+            System.out.print("Please enter your Zip: ");
+
+            customer.setZip(in.nextLine());
+        
+            System.out.println(customer.getStreetAddress());
+        
+        Customer.customers.add(customer);
+        
+        
+        return customer;
+        
+    }//End Method
+    
+    
+    
+}//End Class

@@ -1,6 +1,5 @@
 /*------------------------------------------------------------- 
 // AUTHOR: Mohamed Mokhtar
-// FILENAME: OnlineShop.java
 // SPECIFICATION: Final Project (Online Shop Application) class
 // FOR: CSE 110 - Final Project
 // TIME SPENT: -
@@ -10,32 +9,44 @@ package onlineshop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.text.NumberFormat;
 import java.util.Scanner;
 
-/**
- *
- * @author abdel
- */
+
+
 public class Inventory {
     
-    static File inventoryFile = new File("src/onlineshop/datafiles/inventory.txt");
     
     
-    public static void printInventory() throws FileNotFoundException{
+    static DynamicArray inventory = new DynamicArray();
+    
+    static File inventoryFile = new File("src/onlineshop/inventory.txt");
+    
+    
+    public static void printInventory() throws FileNotFoundException
+    {
         
-        Item item;
-        DynamicArray items = fetchItems();
+       Item item;
         
-        for(int i=0; i<items.size; i++){
-            item = (Item) items.array[i];
-            System.out.println((i+1) + ") " + item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice());
+         NumberFormat frm = NumberFormat.getCurrencyInstance();
+        
+         System.out.println("\nItem\t\tQuantity\t\tPrice\n----------------------------------------------");
+         
+        for(int i=0;i<inventory.size;i++)
+        {
+            
+            item =  (Item) inventory.array[i];
+            
+                System.out.println("\n"+(i+1) +") " +item.getName()+"\t\t"
+                    
+                    +item.getQuantity() +"\t\t" +frm.format(item.getPrice()));
+            
         }
         
         
     }
+    
+    
     
     public static DynamicArray fetchItems() throws FileNotFoundException{
         
@@ -58,53 +69,114 @@ public class Inventory {
         return items;
     }
     
-    public static Item searchItem(String search) throws FileNotFoundException{
+    
+    
+    public static Item searchItem(String search) throws FileNotFoundException
+    {
         
         boolean found = false;
-        Item item = null;
+        
+         Item item = null;
+        
         DynamicArray items = fetchItems();
         
-        int i = 0;
+         int i = 0;
         
-        while(i<items.size && !found){
+        while(i<items.size && !found)
+        {
             
-            item = (Item) items.array[i];
+             item = (Item) items.array[i];
+            
             i++;
             
             if(item.getName().equalsIgnoreCase(search)){
+                
                 found = true;
+                
                 break;
+                
             }
             
         }
         
         if(!found)
-            return null;
+        {   
+                return null;
+        }
         else
-            return item;
-        
-    }
-    
-    public static void editItem(Item item,int quantity) throws FileNotFoundException, IOException{
-        
-        String content = "";
-        Scanner inFile = new Scanner(new FileReader(inventoryFile));
-        
-        String entry = item.getName() + "," + item.getQuantity() + "," + item.getPrice();
-        String newEntry = item.getName() + "," + quantity + "," + item.getPrice();
-        
-        while(inFile.hasNextLine()){
-            content += inFile.nextLine() + "\n";
-            
+        {    
+                return item;
         }
         
         
-        PrintWriter outFile = new PrintWriter(inventoryFile);
         
-        content = content.replaceAll(entry, newEntry);
-        outFile.print(content);
         
-        inFile.close();
-        outFile.close();
+    }
+    
+    
+    
+    public static void editItem(Item item, boolean flag)
+    {
+        
+        Item target = null;
+        
+        int quantity;
+        
+        for(int i=0;i<inventory.size;i++)
+        {
+            
+            
+            
+             target = (Item) inventory.array[i];
+            
+             if(flag)
+            {
+                
+                 quantity= target.getQuantity() -item.getQuantity();
+                
+            }
+            else
+            {
+                
+                    quantity =target.getQuantity() + item.getQuantity();
+                
+            }
+            
+            
+            if(quantity<0){
+                
+                quantity = 0;
+                
+            }
+                
+            
+            if(item.getName().equals(target.getName()))
+            {
+                
+                target.setQuantity(quantity);
+                
+                inventory.array[i] = target;
+                
+            }
+            
+        }
+            
+        
+    }
+    
+    
+    
+    public static int isExist(String name) {
+        
+        Item item;
+        
+        for(int i=0; i<inventory.size; i++){
+            item = (Item) inventory.array[i];
+            if(item.getName().equalsIgnoreCase(name)){
+                return i;
+            }
+        }
+        
+        return -1;
     }
 }

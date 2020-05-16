@@ -1,0 +1,9 @@
+Sugar,35,2.5
+Water,74,2.3
+Apples,42,3.0
+Milk,85,4.2
+Rice,128,5.3
+Yogurt,54,2.5
+Butter,64,4.2
+Eggs,23,6.4
+Cheese,54,3.7
